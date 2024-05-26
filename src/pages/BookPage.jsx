@@ -3,41 +3,31 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 
-export default function Page () {
+export default function Page() {
   // const location = useLocation();
   // const { id } = location.state;
 
-  const { data, setData } = useState([]);
-  const { status, setStatus } = useState([]);
-  const { error, setError } = useState(null);
-
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get(process.env.REACT_APP_BASE_URL + "books/1")
-    .then((response) => {
-        console.log(response.data);
+    axios
+      .get(import.meta.env.VITE_APP_BASE_URL + "books/1")
+      .then((response) => {
         setData(response.data);
       })
       .catch((error) => {
-        setError(error);
-      })
+        console.error(error);
+      });
+  }, []);
 
-    // axios
-    //   .get(process.env.REACT_APP_BASE_URL + 1)
-    //   .then((response) => {
-    //     setData(response.data);
-    //   })
-    //   .catch((error) => {
-    //     setError(error);
-    // });
-  });
+  console.log(data);
 
   function showModal() {
     document.getElementById("my_modal_6").showModal();
   }
 
   function setOpenedContainer(container) {
-    sessionStorage.setItem('opened', container);
+    sessionStorage.setItem("opened", container);
     window.location = "/dashboard";
   }
 
