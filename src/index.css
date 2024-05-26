@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: Poppins-Regular;
+  src: url("/fonts/Poppins-Regular.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Bold;
+  src: url("/fonts/Poppins-Bold.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Semibold;
+  src: url("/fonts/Poppins-SemiBold.ttf");
+}
+
+.poppins-regular {
+  font-family: Poppins-Regular, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: Poppins-Semibold, sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.poppins-bold {
+  font-family: Poppins-Bold, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  @apply poppins-regular;
+  @apply w-full;
+  @apply min-h-screen;
+  @apply max-sm:px-4;
+}
+
+.btn {
+  @apply poppins-semibold;
+  @apply tracking-wide;
+}
+
+.btn-primary {
+  @apply text-[#ffffff];
+}
+
+.btn-accent {
+  @apply text-[#ffffff];
+}
+
+.btn-warning {
+  @apply text-[#ffffff];
+}
+/* bg-base-100 rounded-xl overflow-hidden transition-all hover:scale-95 active:scale-90 cursor-pointer */
+.grid-items {
+  @apply bg-base-100;
+  @apply rounded-xl;
+  @apply overflow-hidden;
+  @apply transition-all;
+  @apply duration-200;
+  @apply hover:scale-[1.03];
+  @apply active:scale-100;
+  @apply cursor-pointer;
+  @apply shadow-lg;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
