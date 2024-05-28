@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
-// eslint-disable-next-line react/prop-types
+Navbar.propTypes = {
+  showBookList: PropTypes.func.isRequired,
+  showAddBook: PropTypes.func.isRequired,
+};
+
 export default function Navbar({showBookList, showAddBook}) {
   const showModal = () => {
     document.getElementById('my_modal_5').showModal();
@@ -37,7 +42,7 @@ export default function Navbar({showBookList, showAddBook}) {
         </label>
       </div>
 
-      <nav className="drawer lg:drawer-open fixed left-0 w-fit overflex-y-auto">
+      <nav className="drawer lg:drawer-open fixed left-0 top-0 w-fit overflex-y-auto">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-side">
           <label

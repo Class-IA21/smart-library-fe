@@ -29,54 +29,55 @@ export default function Dashboard() {
         });
     }
 
-    getBooks()
-    }, []);
+    getBooks();
+  }, []);
 
-    const handlePostBook = async (event) => {
-      event.preventDefault();
+  const handlePostBook = async (event) => {
+    event.preventDefault();
 
-      const formData = new FormData(event.target);
-      const data = Object.fromEntries(formData);
-      
-      const updatedData = {
-        ...data,
-        card_id: parseInt(data.card_id, 10),
-        pages: parseInt(data.pages, 10),
-      };
-    
-      setBookLoading(true);
-    
-      try {
-        const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}books`, updatedData, {
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+
+    const updatedData = {
+      ...data,
+      card_id: parseInt(data.card_id, 10),
+      pages: parseInt(data.pages, 10),
+    };
+
+    setBookLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_BASE_URL}books`,
+        updatedData,
+        {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-        });
-      
-        if (response.status == 200) {
-          formData.reset();
-          alert("Upload Successful");
-        } else {
-          formData.reset();
-          alert("Upload Error");
         }
-      } catch (error) {
-        console.error('Error:', error);
-      }
+      );
 
-      setBookLoading(false);
+      if (response.status == 200) {
+        formData.reset();
+        alert("Upload Successful");
+      } else {
+        formData.reset();
+        alert("Upload Error");
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
-    
+
+    setBookLoading(false);
+  };
+
   return (
     <>
       <Helmet>
         <title>Laman Dashboard</title>
         <link rel="icon" type="image/svg+xml" href="/icons/library-16.png" />
       </Helmet>
-      <Navbar
-        showBookList={() => setOpenedContainer("container-book-list")}
-        showAddBook={() => setOpenedContainer("container-add-book")}
-      />
+
       <div className="lg:ml-80 max-lg:mt-20 sm:p-8">
         <div
           id="container-book-list"
@@ -226,6 +227,11 @@ export default function Dashboard() {
           </form>
         </div>
       </div>
+
+      <Navbar
+        showBookList={() => setOpenedContainer("container-book-list")}
+        showAddBook={() => setOpenedContainer("container-add-book")}
+      />
     </>
   );
 }

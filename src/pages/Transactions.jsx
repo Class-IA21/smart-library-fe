@@ -1,27 +1,26 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
-import CardItem from "../components/CardItem";
 import { Helmet } from "react-helmet";
+import TransactionItem from "../components/TransactionItem";
 
 export default function Cards() {
-  const [cards, setCards] = useState({});
-  const [cardLoading, setCardLoading] = useState(false);
+  const [transactions, setTransactions] = useState({});
 
   useEffect(() => {
-    async function getCards() {
+    async function getTransactions() {
       axios
-        .get(import.meta.env.VITE_APP_BASE_URL + "cards")
+        .get(import.meta.env.VITE_APP_BASE_URL + "borrows")
         .then((response) => {
-          setCards(response.data);
+          setTransactions(response.data);
         })
         .catch((error) => {
           console.error(error);
-          window.location.href = "/error";
+          window.location = "/error";
         });
     }
 
-    getCards();
+    getTransactions();
   }, []);
 
   function setOpenedContainer(container) {
@@ -29,99 +28,21 @@ export default function Cards() {
     window.location = "/dashboard";
   }
 
-  const handlePostCard = async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-    setCardLoading(true);
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_BASE_URL}cards`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.status == 201) {
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Upload Error");
-    }
-    setCardLoading(false);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_APP_BASE_URL}cards/${id}`
-      );
-      if (response.status == 200) {
-        window.location.reload();
-      }
-      setCardLoading(false);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Delete Unsuccessful");
-    }
-  };
-
   return (
     <>
       <Helmet>
         <title>Transaksi</title>
         <link rel="icon" type="image/svg+xml" href="/icons/library-16.png" />
       </Helmet>
-      <Navbar
-        showBookList={() => {
-          setOpenedContainer("container-book-list");
-        }}
-        showAddBook={() => {
-          setOpenedContainer("container-add-book");
-        }}
-      />
 
-      <div className="lg:ml-80 max-lg:mt-20 sm:p-8">
-        <div id="container-cards" className="w-full max-w-7xl mx-auto pt-8">
-          <form
-            className="flex max-md:flex-col gap-2 max-w-md md:items-center"
-            onSubmit={handlePostCard}
-          >
-            <input
-              type="text"
-              placeholder="Masukan UID"
-              className="input input-bordered input-primary"
-              name="uid"
-              required
-            />
-            <select
-              className="select-bordered border-primary select"
-              name="type"
-            >
-              <option disabled>Tipe Kartu</option>
-              <option defaultValue="book">Book</option>
-              <option defaultValue="student">Student</option>
-            </select>
-            <button type="submit" className="btn btn-primary">
-              {cardLoading ? (
-                <span className="loading loading-spinner loading-md"></span>
-              ) : (
-                "Add New Card"
-              )}
-            </button>
-          </form>
-
-          <div className="divider"></div>
-
+      <div className="lg:ml-80 max-lg:mt-28 sm:p-8 xl:px-10 px-8">
+        <div
+          id="container-transactions"
+          className="w-full max-w-7xl mx-auto pt-8"
+        >
           <div className="max-w-6xl w-full mx-auto mt-10 xl:px-10 min-h-screen">
             <div className="text-primary poppins-semibold text-3xl max-sm:text-2xl mb-10">
-              Daftar Kartu
+              Transaksi
             </div>
 
             <div className="divider"></div>
@@ -131,25 +52,27 @@ export default function Cards() {
                 <thead>
                   <tr className="text-sm">
                     <th></th>
-                    <th>ID Kartu</th>
-                    <th>UID</th>
-                    <th>Tipe</th>
-                    <th>Hapus</th>
+                    <th>ID Buku</th>
+                    <th>ID Siswa</th>
+                    <th>Tanggal Pinjam</th>
+                    <th>Tanggal Akhir</th>
+                    <th>Tanggal Kembali</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {cards.data && cards.data.length > 0
-                    ? cards.data.map((card, index) => {
+                  {transactions.data && transactions.data.length > 0
+                    ? transactions.data.map((transaction, index) => {
                         return (
-                          <CardItem
+                          <TransactionItem
                             key={index}
                             number={index + 1}
-                            id={card.id}
-                            uid={card.uid}
-                            type={card.type}
-                            action={() => {
-                              handleDelete(card.id);
-                            }}
+                            bookId={transaction.book_id}
+                            studentId={transaction.student_id}
+                            borrowDate={transaction.borrow_date}
+                            dueDate={transaction.due_date}
+                            returnDate={transaction.return_date}
+                            status={transaction.status}
                           />
                         );
                       })
@@ -160,6 +83,15 @@ export default function Cards() {
           </div>
         </div>
       </div>
+
+      <Navbar
+        showBookList={() => {
+          setOpenedContainer("container-book-list");
+        }}
+        showAddBook={() => {
+          setOpenedContainer("container-add-book");
+        }}
+      />
     </>
   );
 }

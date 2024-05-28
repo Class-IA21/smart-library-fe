@@ -1,6 +1,7 @@
 // import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import TransactionItem from "../components/TransactionItem";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -8,9 +9,10 @@ import { Helmet } from "react-helmet";
 export default function Page() {
   const location = useLocation();
   const { id } = location.state;
-  const [ updateLoading, setUpdateLoading ] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   const [data, setData] = useState({});
+  const [transactions, setTransactions] = useState({})
 
   useEffect(() => {
     async function getData() {
@@ -25,7 +27,21 @@ export default function Page() {
         });
     }
 
+    async function getTransactions(id) {
+      axios
+        .get(`${import.meta.env.VITE_APP_BASE_URL}borrows/book/${id}`)
+        .then((response) => {
+          setTransactions(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          window.location = "/error";
+        });
+    }
+
+    
     getData();
+    getTransactions(id);
   }, [id]);
 
   const handleBooksUpdate = async (event) => {
@@ -43,33 +59,39 @@ export default function Page() {
     setUpdateLoading(true);
 
     try {
-      const response = await axios.put(`${import.meta.env.VITE_APP_BASE_URL}books/${id}`, updatedData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.put(
+        `${import.meta.env.VITE_APP_BASE_URL}books/${id}`,
+        updatedData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    if (response.status == 200) {
-      window.location.reload();
-    }
+      if (response.status == 200) {
+        window.location.reload();
+      }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
 
     setUpdateLoading(false);
-  }
+  };
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(`${import.meta.env.VITE_APP_BASE_URL}books/${id}`);
+      const response = await axios.delete(
+        `${import.meta.env.VITE_APP_BASE_URL}books/${id}`
+      );
 
-    if (response.status == 200) {
-      window.location.href = "/dashboard";
-    }
+      if (response.status == 200) {
+        window.location.href = "/dashboard";
+      }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
-  }
+  };
 
   function showModal() {
     document.getElementById("my_modal_6").showModal();
@@ -87,20 +109,11 @@ export default function Page() {
         <link rel="icon" type="image/svg+xml" href="/icons/library-16.png" />
       </Helmet>
 
-      <Navbar
-        showBookList={() => {
-          setOpenedContainer("container-book-list");
-        }}
-        showAddBook={() => {
-          setOpenedContainer("container-add-book");
-        }}
-      />
-
-      <div id="main-container" className="lg:ml-80 max-lg:mt-20 px-8">
+      <div id="main-container" className="lg:ml-80 max-lg:mt-20 px-8 z-10">
         {data["data"] ? (
           <form
             onSubmit={handleBooksUpdate}
-            className="flex max-md:flex-col max-md:items-center justify-center gap-16 max-md:gap-8 items-start max-w-5xl mx-auto py-20 max-sm:pb-10"
+            className="flex max-md:flex-col max-md:items-center justify-center gap-16 max-md:gap-8 items-start max-w-5xl mx-auto py-20 max-sm:pb-4"
           >
             <div className="max-w-60 md:sticky md:top-10 flex items-center max-md:p-8 justify-center w-full -z-10">
               <img
@@ -215,7 +228,7 @@ export default function Page() {
               </div>
               <div className="divider"></div>
 
-              <div className="btn-container flex mt-4 gap-2">
+              <div className="btn-container flex mt-8 gap-2">
                 <button type="submit" className="btn btn-primary">
                   {updateLoading ? (
                     <span className="loading loading-spinner loading-md"></span>
@@ -242,36 +255,43 @@ export default function Page() {
               <thead>
                 <tr className="text-sm">
                   <th></th>
-                  <th>ID Pemeinjam</th>
+                  <th>ID Peminjam</th>
                   <th>Waktu Pinjam</th>
                   <th>Batas Waktu</th>
                   <th>Waktu Kembali</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th>1</th>
-                  <td>Cy Ganderton</td>
-                  <td>Quality Control Specialist</td>
-                  <td>Blue</td>
-                </tr>
-                <tr className="hover">
-                  <th>2</th>
-                  <td>Hart Hagerty</td>
-                  <td>Desktop Support Technician</td>
-                  <td>Purple</td>
-                </tr>
-                <tr>
-                  <th>3</th>
-                  <td>Brice Swyre</td>
-                  <td>Tax Accountant</td>
-                  <td>Red</td>
-                </tr>
+                {transactions.data && transactions.data.length > 0
+                  ? transactions.data.map((transaction, index) => {
+                      return (
+                        <TransactionItem
+                          key={index}
+                          number={index + 1}
+                          bookId={transaction.book_id}
+                          studentId={transaction.student_id}
+                          borrowDate={transaction.borrow_date}
+                          dueDate={transaction.due_date}
+                          returnDate={transaction.return_date}
+                          status={transaction.status}
+                        />
+                      );
+                    })
+                  : null}
               </tbody>
             </table>
           </div>
         </div>
       </div>
+
+      <Navbar
+        showBookList={() => {
+          setOpenedContainer("container-book-list");
+        }}
+        showAddBook={() => {
+          setOpenedContainer("container-add-book");
+        }}
+      />
 
       <dialog
         id="my_modal_6"

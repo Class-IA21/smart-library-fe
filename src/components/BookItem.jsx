@@ -1,6 +1,14 @@
 import { Link } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
+import PropTypes from "prop-types";
+
+BookItem.propTypes = {
+  id: PropTypes.number.isRequired,
+  author: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  pages: PropTypes.number.isRequired,
+};
+
 export default function BookItem({id, author, title, pages}) {
   return (
     <Link className="grid-items" to="/book" state={{ id: id }}>

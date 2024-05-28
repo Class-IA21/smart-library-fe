@@ -80,16 +80,8 @@ export default function Cards () {
         <title>RFID</title>
         <link rel="icon" type="image/svg+xml" href="/icons/library-16.png" />
       </Helmet>
-      <Navbar
-        showBookList={() => {
-          setOpenedContainer("container-book-list");
-        }}
-        showAddBook={() => {
-          setOpenedContainer("container-add-book");
-        }}
-      />
 
-      <div className="lg:ml-80 max-lg:mt-20 sm:p-8">
+      <div className="lg:ml-80 max-lg:mt-28 sm:p-8">
         <div id="container-cards" className="w-full max-w-7xl mx-auto pt-8">
           <form
             className="flex max-md:flex-col gap-2 max-w-md md:items-center"
@@ -121,7 +113,7 @@ export default function Cards () {
 
           <div className="divider"></div>
 
-          <div className="max-w-6xl w-full mx-auto mt-10 xl:px-10 px-8 min-h-screen">
+          <div className="max-w-6xl w-full mx-auto mt-10 xl:px-10 px-8">
             <div className="text-primary poppins-semibold text-3xl max-sm:text-2xl mb-10">
               Daftar Kartu
             </div>
@@ -160,6 +152,15 @@ export default function Cards () {
           </div>
         </div>
       </div>
+
+      <Navbar
+        showBookList={() => {
+          setOpenedContainer("container-book-list");
+        }}
+        showAddBook={() => {
+          setOpenedContainer("container-add-book");
+        }}
+      />
     </>
   );
 }
