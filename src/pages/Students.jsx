@@ -2,21 +2,21 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import { Helmet } from "react-helmet";
-import TransactionItem from "../components/TransactionItem";
+import StudentItem from "../components/StudentItem";
 
 export default function Cards() {
-  const [transactions, setTransactions] = useState({});
+  const [students, setStudents] = useState({});
 
   useEffect(() => {
     async function getTransactions() {
       axios
-        .get(`${import.meta.env.VITE_APP_BASE_URL}borrows`)
+        .get(`${import.meta.env.VITE_APP_BASE_URL}students`)
         .then((response) => {
-          setTransactions(response.data);
+          setStudents(response.data);
         })
         .catch((error) => {
           console.error(error);
-          window.location = "/error";
+          // window.location = "/error";
         });
     }
 
@@ -31,7 +31,7 @@ export default function Cards() {
   return (
     <>
       <Helmet>
-        <title>Transaksi</title>
+        <title>Daftar Siswa</title>
         <link rel="icon" type="image/svg+xml" href="/icons/library-16.png" />
       </Helmet>
 
@@ -42,7 +42,7 @@ export default function Cards() {
         >
           <div className="max-w-6xl w-full mx-auto mt-10 xl:px-10 min-h-screen">
             <div className="text-primary poppins-semibold text-3xl max-sm:text-2xl mb-10">
-              Transaksi
+              Daftar Siswa
             </div>
 
             <div className="divider"></div>
@@ -52,26 +52,23 @@ export default function Cards() {
                 <thead>
                   <tr className="text-sm">
                     <th></th>
-                    <th>ID Buku</th>
-                    <th>ID Siswa</th>
-                    <th>Tanggal Pinjam</th>
-                    <th>Tanggal Akhir</th>
-                    <th>Tanggal Kembali</th>
-                    <th>Status</th>
+                    <th>Nama</th>
+                    <th>NPM</th>
+                    <th>ID Kartu</th>
+                    <th>Lihat</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.data && transactions.data.length > 0
-                    ? transactions.data.map((transaction, index) => {
+                  {students.data && students.data.length > 0
+                    ? students.data.map((student, index) => {
                         return (
-                          <TransactionItem
+                          <StudentItem
                             key={index}
                             number={index + 1}
-                            bookIds={transaction.book_ids}
-                            studentId={transaction.student_id}
-                            dueDate={transaction.due_date}
-                            returnDate={transaction.return_date}
-                            status={transaction.status}
+                            name={student.name}
+                            npm={student.npm}
+                            cardId={student.card_id}
+                            id={student.id}
                           />
                         );
                       })

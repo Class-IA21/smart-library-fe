@@ -123,10 +123,9 @@ export default function Cards () {
                 <thead>
                   <tr className="text-sm">
                     <th></th>
-                    <th>ID Kartu</th>
-                    <th>UID</th>
-                    <th>Tipe</th>
-                    <th>Hapus</th>
+                    <th>Nama</th>
+                    <th>NPM</th>
+                    <th>Lihat</th>
                   </tr>
                 </thead>
                 <tbody>

@@ -85,6 +85,15 @@ export default function Navbar({showBookList, showAddBook}) {
               </li>
               <li className="mb-2">
                 <Link
+                  id="btn-students"
+                  className="btn w-full py-2 px-4"
+                  to={"/students"}
+                >
+                  Siswa
+                </Link>
+              </li>
+              <li className="mb-2">
+                <Link
                   id="btn-cards"
                   className="btn w-full py-2 px-4"
                   to={"/cards"}
@@ -94,7 +103,7 @@ export default function Navbar({showBookList, showAddBook}) {
               </li>
               <li className="mb-2">
                 <Link
-                  id="transactions"
+                  id="btn-transactions"
                   className="btn w-full py-2 px-4"
                   to={"/transactions"}
                 >
