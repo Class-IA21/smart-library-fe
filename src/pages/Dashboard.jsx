@@ -1,40 +1,81 @@
 import Navbar from "../components/Navbar";
-import BookItem from "../components/BookItem"; 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import axios from "axios";
-
+import BookItem from "../components/BookItem"; // Path corrected
+import { Helmet } from "react-helmet";
 
 export default function Dashboard() {
-  const [activeSection, setActiveSection] = useState(sessionStorage.getItem('opened') || 'container-book-list');
-
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [activeSection, setActiveSection] = useState(
+    sessionStorage.getItem("opened") || "container-book-list"
+  );
+  const [books, setBooks] = useState({});
+  const [bookLoading, setBookLoading] = useState(false);
 
   function setOpenedContainer(container) {
-    sessionStorage.setItem('opened', container);
+    sessionStorage.setItem("opened", container);
     setActiveSection(container);
   }
 
-
   useEffect(() => {
-    axios
-      .get("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => {
-        setData(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
-  }, []);
+    async function getBooks() {
+      axios
+        .get(import.meta.env.VITE_APP_BASE_URL + "books")
+        .then((response) => {
+          setBooks(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          window.location.href = "/error";
+        });
+    }
 
+    getBooks()
+    }, []);
+
+    const handlePostBook = async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData);
+      
+      const updatedData = {
+        ...data,
+        card_id: parseInt(data.card_id, 10),
+        pages: parseInt(data.pages, 10),
+      };
+    
+      setBookLoading(true);
+    
+      try {
+        const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}books`, updatedData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      
+        if (response.status == 200) {
+          formData.reset();
+          alert("Upload Successful");
+        } else {
+          formData.reset();
+          alert("Upload Error");
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+
+      setBookLoading(false);
+    }
+    
   return (
     <>
+      <Helmet>
+        <title>Laman Dashboard</title>
+        <link rel="icon" type="image/svg+xml" href="/icons/library-16.png" />
+      </Helmet>
       <Navbar
-        onBookList={() => setOpenedContainer("container-book-list")}
-        onAddList={() => setOpenedContainer("container-add-book")}
+        showBookList={() => setOpenedContainer("container-book-list")}
+        showAddBook={() => setOpenedContainer("container-add-book")}
       />
       <div className="lg:ml-80 max-lg:mt-20 sm:p-8">
         <div
@@ -43,30 +84,19 @@ export default function Dashboard() {
             activeSection !== "container-book-list" ? "hidden" : ""
           }`}
         >
-          <BookItem
-            id="asdjs"
-            imgSrc="./src/assets/buku1.jpg"
-            author="G. Dani"
-            title="Keep Up With Us!"
-            status1="dipinjam"
-            statusClass="text-warning"
-          />
-          <BookItem
-            id="asdhasj"
-            imgSrc="./src/assets/buku2.jpg"
-            author="Rintik Sedu"
-            title="Kata"
-            status1="tersedia"
-            statusClass="text-success"
-          />
-          <BookItem
-            id="ahshashhs"
-            imgSrc="./src/assets/buku3.jpg"
-            author="Tere Liye"
-            title="Si Anak Pintar"
-            status1="tersedia"
-            statusClass="text-success"
-          />
+          {books.data && books.data.length > 0
+            ? books.data.map((book, index) => {
+                return (
+                  <BookItem
+                    key={index}
+                    id={book.id}
+                    author={book.author}
+                    title={book.title}
+                    pages={book.pages}
+                  />
+                );
+              })
+            : null}
         </div>
 
         <div
@@ -79,16 +109,10 @@ export default function Dashboard() {
             Tambahkan Buku Baru
           </h2>
           <div className="divider"></div>
-          <form action="" className="w-full max-w-xl mx-auto mt-8 max-lg:px-4">
-            <label className="">Masukan gambar buku</label>
-            <input
-              type="file"
-              className="file-input file-input-bordered file-input-primary w-full my-2 lg:my-4"
-              name="images"
-              required
-            />
-            <div className="divider"></div>
-
+          <form
+            onSubmit={handlePostBook}
+            className="w-full max-w-4xl mx-auto mt-8 max-lg:px-4"
+          >
             <label>Masukan judul buku</label>
             <input
               type="text"
@@ -121,10 +145,21 @@ export default function Dashboard() {
 
             <label>Masukan nomor ISBN</label>
             <input
-              type="number"
-              placeholder="*************"
+              type="text"
+              placeholder="***-*-**-******-*"
               className="input input-bordered input-primary w-full my-2 lg:my-4"
               name="isbn"
+              required
+            />
+            <div className="divider"></div>
+
+            <label>Masukan ID RFID</label>
+            <input
+              type="number"
+              min="0"
+              placeholder="ID RFID"
+              className="input input-bordered input-primary w-full my-2 lg:my-4"
+              name="card_id"
               required
             />
             <div className="divider"></div>
@@ -177,11 +212,17 @@ export default function Dashboard() {
             ></textarea>
             <div className="divider"></div>
 
-            <input
+            <button
               type="submit"
               className="btn btn-primary mb-20"
               value="Tambahkan"
-            />
+            >
+              {bookLoading ? (
+                <span className="loading loading-spinner loading-md"></span>
+              ) : (
+                "Add Book"
+              )}
+            </button>
           </form>
         </div>
       </div>

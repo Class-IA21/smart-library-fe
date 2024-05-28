@@ -1,0 +1,165 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Navbar from "../components/Navbar";
+import CardItem from "../components/CardItem";
+import { Helmet } from "react-helmet";
+
+export default function Cards() {
+  const [cards, setCards] = useState({});
+  const [cardLoading, setCardLoading] = useState(false);
+
+  useEffect(() => {
+    async function getCards() {
+      axios
+        .get(import.meta.env.VITE_APP_BASE_URL + "cards")
+        .then((response) => {
+          setCards(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          window.location.href = "/error";
+        });
+    }
+
+    getCards();
+  }, []);
+
+  function setOpenedContainer(container) {
+    sessionStorage.setItem("opened", container);
+    window.location = "/dashboard";
+  }
+
+  const handlePostCard = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    setCardLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_BASE_URL}cards`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status == 201) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Upload Error");
+    }
+    setCardLoading(false);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_APP_BASE_URL}cards/${id}`
+      );
+      if (response.status == 200) {
+        window.location.reload();
+      }
+      setCardLoading(false);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Delete Unsuccessful");
+    }
+  };
+
+  return (
+    <>
+      <Helmet>
+        <title>Transaksi</title>
+        <link rel="icon" type="image/svg+xml" href="/icons/library-16.png" />
+      </Helmet>
+      <Navbar
+        showBookList={() => {
+          setOpenedContainer("container-book-list");
+        }}
+        showAddBook={() => {
+          setOpenedContainer("container-add-book");
+        }}
+      />
+
+      <div className="lg:ml-80 max-lg:mt-20 sm:p-8">
+        <div id="container-cards" className="w-full max-w-7xl mx-auto pt-8">
+          <form
+            className="flex max-md:flex-col gap-2 max-w-md md:items-center"
+            onSubmit={handlePostCard}
+          >
+            <input
+              type="text"
+              placeholder="Masukan UID"
+              className="input input-bordered input-primary"
+              name="uid"
+              required
+            />
+            <select
+              className="select-bordered border-primary select"
+              name="type"
+            >
+              <option disabled>Tipe Kartu</option>
+              <option defaultValue="book">Book</option>
+              <option defaultValue="student">Student</option>
+            </select>
+            <button type="submit" className="btn btn-primary">
+              {cardLoading ? (
+                <span className="loading loading-spinner loading-md"></span>
+              ) : (
+                "Add New Card"
+              )}
+            </button>
+          </form>
+
+          <div className="divider"></div>
+
+          <div className="max-w-6xl w-full mx-auto mt-10 xl:px-10 min-h-screen">
+            <div className="text-primary poppins-semibold text-3xl max-sm:text-2xl mb-10">
+              Daftar Kartu
+            </div>
+
+            <div className="divider"></div>
+
+            <div className="overflow-x-auto">
+              <table className="table">
+                <thead>
+                  <tr className="text-sm">
+                    <th></th>
+                    <th>ID Kartu</th>
+                    <th>UID</th>
+                    <th>Tipe</th>
+                    <th>Hapus</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cards.data && cards.data.length > 0
+                    ? cards.data.map((card, index) => {
+                        return (
+                          <CardItem
+                            key={index}
+                            number={index + 1}
+                            id={card.id}
+                            uid={card.uid}
+                            type={card.type}
+                            action={() => {
+                              handleDelete(card.id);
+                            }}
+                          />
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
