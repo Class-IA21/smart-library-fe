@@ -10,6 +10,7 @@ import Cards from "./pages/Cards.jsx";
 import Students from "./pages/Students.jsx";
 import StudentPage from "./pages/StudentPage.jsx";
 import Transactions from "./pages/Transactions.jsx";
+import UserTransaction from "./pages/UserTransaction.jsx";
 import NoPage from "./pages/NoPage.jsx";
 
 const router = createBrowserRouter([
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: "/transactions",
     element: <Transactions />,
+  },
+  {
+    path: "/transaction/:trxID/:studentID/:bookIDs",
+    element: <UserTransaction />,
   },
 ]);
 

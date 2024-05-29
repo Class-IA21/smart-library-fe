@@ -98,9 +98,7 @@ export default function Cards () {
               className="select-bordered border-primary select"
               name="type"
             >
-              <option disabled>Tipe Kartu</option>
               <option defaultValue="book">Book</option>
-              <option defaultValue="student">Student</option>
             </select>
             <button type="submit" className="btn btn-primary">
               {cardLoading ? (
@@ -123,9 +121,9 @@ export default function Cards () {
                 <thead>
                   <tr className="text-sm">
                     <th></th>
-                    <th>Nama</th>
-                    <th>NPM</th>
-                    <th>Lihat</th>
+                    <th>ID Kartu</th>
+                    <th>UID</th>
+                    <th>Tipe</th>
                   </tr>
                 </thead>
                 <tbody>

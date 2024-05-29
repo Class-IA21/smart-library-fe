@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 CardItem.propTypes = {
   id: PropTypes.number.isRequired,
   number: PropTypes.number.isRequired,
-  uid: PropTypes.number.isRequired,
+  uid: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   action: PropTypes.func.isRequired,
 };

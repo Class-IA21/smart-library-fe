@@ -37,7 +37,6 @@ export default function Dashboard() {
 
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
-
     const updatedData = {
       ...data,
       card_id: parseInt(data.card_id, 10),
@@ -57,15 +56,14 @@ export default function Dashboard() {
         }
       );
 
-      if (response.status == 200) {
-        formData.reset();
+
+      if (!response.data.error) {
+        event.target.reset();
         alert("Upload Successful");
-      } else {
-        formData.reset();
-        alert("Upload Error");
       }
     } catch (error) {
       console.error("Error:", error);
+      alert("Update failed!");
     }
 
     setBookLoading(false);
@@ -154,7 +152,7 @@ export default function Dashboard() {
             />
             <div className="divider"></div>
 
-            <label>Masukan ID RFID</label>
+            <label>Masukan UID</label>
             <input
               type="number"
               min="0"

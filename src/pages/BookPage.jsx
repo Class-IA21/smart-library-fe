@@ -74,6 +74,7 @@ export default function Page() {
       }
     } catch (error) {
       console.error("Error:", error);
+      alert("Update failed!")
     }
 
     setUpdateLoading(false);
@@ -90,6 +91,8 @@ export default function Page() {
       }
     } catch (error) {
       console.error("Error:", error);
+      alert("Delete failed!");
+
     }
   };
 
