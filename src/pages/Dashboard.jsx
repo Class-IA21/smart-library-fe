@@ -15,6 +15,19 @@ export default function Dashboard() {
     sessionStorage.setItem("opened", container);
     setActiveSection(container);
   }
+  const [uid, setUid] = useState('');
+
+  const fetchUID = async () => {
+    try {
+      const response = await axios.get(import.meta.env.VITE_APP_BASE_URL + "cards/container_card"); // Update the endpoint if necessary
+      if(response.status == 200){
+        console.log(response.data.data.uid)
+        setUid(response.data.data.uid);
+      }
+    } catch (error) {
+      // console.error('Error fetching UID:', error);
+    }
+  };
 
   useEffect(() => {
     async function getBooks() {
@@ -29,7 +42,14 @@ export default function Dashboard() {
         });
     }
 
+    fetchUID();
     getBooks();
+
+    // Fetch every 500ms
+    const interval = setInterval(fetchUID, 2000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   const handlePostBook = async (event) => {
@@ -154,11 +174,12 @@ export default function Dashboard() {
 
             <label>Masukan UID</label>
             <input
-              type="number"
+              type="text"
               min="0"
               placeholder="ID RFID"
               className="input input-bordered input-primary w-full my-2 lg:my-4"
               name="card_id"
+              value={uid}
               required
             />
             <div className="divider"></div>

@@ -7,6 +7,19 @@ import { Helmet } from "react-helmet";
 export default function Cards () {
   const [cards, setCards] = useState({});
   const [cardLoading, setCardLoading] = useState(false);
+  const [uid, setUid] = useState('');
+
+  const fetchUID = async () => {
+    try {
+      const response = await axios.get(import.meta.env.VITE_APP_BASE_URL + "cards/container_card"); // Update the endpoint if necessary
+      if(response.status == 200){
+        console.log(response.data.data.uid)
+        setUid(response.data.data.uid);
+      }
+    } catch (error) {
+      // console.error('Error fetching UID:', error);
+    }
+  };
 
   useEffect(() => {
     async function getCards() {
@@ -21,7 +34,13 @@ export default function Cards () {
         });
     }
 
+    fetchUID();
     getCards();
+
+    const interval = setInterval(fetchUID, 2000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   function setOpenedContainer(container) {
@@ -92,6 +111,7 @@ export default function Cards () {
               placeholder="Masukan UID"
               className="input input-bordered input-primary"
               name="uid"
+              value={uid}
               required
             />
             <select
