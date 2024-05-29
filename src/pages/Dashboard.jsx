@@ -91,7 +91,7 @@ export default function Dashboard() {
                     id={book.id}
                     author={book.author}
                     title={book.title}
-                    pages={book.pages}
+                    cardID={book.card_id}
                   />
                 );
               })

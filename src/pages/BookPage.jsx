@@ -8,7 +8,12 @@ import { Helmet } from "react-helmet";
 
 export default function Page() {
   const location = useLocation();
-  const { id } = location.state;
+  const { id, cardID } = location.state;
+
+  if (!id) {
+    window.location.href = "/dashboard";
+  }
+
   const [updateLoading, setUpdateLoading] = useState(false);
 
   const [data, setData] = useState({});
@@ -87,7 +92,13 @@ export default function Page() {
       );
 
       if (response.status == 200) {
-        window.location.href = "/dashboard";
+        const response = await axios.delete(
+          `${import.meta.env.VITE_APP_BASE_URL}cards/${cardID}`
+        );
+
+        if (response.status == 200) {
+          window.location.href = "/dashboard";
+        }
       }
     } catch (error) {
       console.error("Error:", error);
