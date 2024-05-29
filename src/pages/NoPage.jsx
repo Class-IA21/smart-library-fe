@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-
+// if (sessionStorage.getItem("auth")) sessionStorage.removeItem("auth");
 
 export default function NoPage() {
   return (

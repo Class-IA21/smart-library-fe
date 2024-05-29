@@ -44,7 +44,7 @@ const router = createBrowserRouter([
     element: <Transactions />,
   },
   {
-    path: "/transaction/:trxID/:studentID/:bookIDs",
+    path: "/transaction/:trxID/:studentID/",
     element: <UserTransaction />,
   },
 ]);

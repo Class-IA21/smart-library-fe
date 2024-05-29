@@ -7,9 +7,7 @@ export default function UserTransaction() {
   const [trx, setTrx] = useState({});
   const [studentName, setStudentName] = useState("");
   const [bookTitles, setBookTitles] = useState([]);
-  const { trxID, studentID, bookIDs } = useParams();
-
-  const booksArr = useMemo(() => bookIDs.split(","), [bookIDs]);
+  const { trxID, studentID } = useParams();
 
   useEffect(() => {
     const handleGetTransactionByID = async () => {
@@ -36,7 +34,7 @@ export default function UserTransaction() {
             setStudentName(studentResponse.data.data.name);
           }
 
-          const bookTitlePromises = booksArr.map(async (book_id) => {
+          const bookTitlePromises = trx.book_ids.map(async (book_id) => {
             const bookResponse = await axios.get(
               `${import.meta.env.VITE_APP_BASE_URL}/books/${book_id}`
             );
@@ -50,12 +48,12 @@ export default function UserTransaction() {
         }
       } catch (error) {
         console.error(error);
-        window.location.href = "/error";
+        // window.location.href = "/error";
       }
     };
 
     handleGetTransactionByID();
-  }, [trxID, studentID, booksArr]);
+  }, [trxID, studentID, trx]);
 
   const data = useMemo(
     () => ({
@@ -80,18 +78,18 @@ export default function UserTransaction() {
         className="w-full min-h-screen flex items-center justify-center duration-700 transition-all bg-base-100"
       >
         <div className="w-full max-w-md shadow-xl rounded-3xl px-8 py-10 bg-base-100/70 backdrop-blur-sm poppins-semibold">
-          <div className="flex gap-2 mb-2">
+          <div className="flex gap-2 mb-1">
             <label>Nama:</label>
-            <div>{data.name || "Arya Ulya Krisna"}</div>
+            <div className="poppins-regular">{data.name || "Arya Ulya Krisna"}</div>
           </div>
           <div className="flex gap-2 mb-2">
             <label>ID Transaksi:</label>
-            <div>{trx.transaction_id || "0023948903094"}</div>
+            <div className="poppins-regular">{trx.transaction_id || "0023948903094"}</div>
           </div>
           <div className="divider"></div>
           <div className="flex flex-col gap-2 mb-2">
             <label>Judul Buku:</label>
-            <ul className="pl-2">
+            <ul className="pl-2 poppins-regular">
               {data.bookTitle.map((title, index) => (
                 <li key={index}>{title}</li>
               ))}
@@ -100,17 +98,17 @@ export default function UserTransaction() {
           <div className="divider"></div>
           <div className="flex gap-2 mb-2">
             <label>Tanggal Pinjam:</label>
-            <div className="text-success">{data.borrowDate || "30/24/123"}</div>
+            <div className="text-success poppins-regular">{data.borrowDate || "30/24/123"}</div>
           </div>
           <div className="divider"></div>
           <div className="flex gap-2 mb-2">
             <label>Tengat Pinjam:</label>
-            <div className="text-warning">{data.dueDate || "30/24/123"}</div>
+            <div className="text-warning poppins-regular">{data.dueDate || "30/24/123"}</div>
           </div>
           <div className="divider"></div>
           <div className="flex gap-2 mb-2">
             <label>Tanggal Pengembalian:</label>
-            <div>{data.returnDate || "30/24/123"}</div>
+            <div className="poppins-regular">{data.returnDate || "30/24/123"}</div>
           </div>
         </div>
       </div>

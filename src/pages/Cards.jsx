@@ -11,15 +11,15 @@ export default function Cards () {
 
   const fetchUID = async () => {
     try {
-      const response = await axios.get(import.meta.env.VITE_APP_BASE_URL + "cards/container_card"); // Update the endpoint if necessary
+      const response = await axios.get(import.meta.env.VITE_APP_BASE_URL + "cards/container_card"); 
       if(response.status == 200){
         console.log(response.data.data.uid)
         setUid(response.data.data.uid);
       }
     } catch (error) {
-      // console.error('Error fetching UID:', error);
+      console.error('Error fetching UID:', error);
     }
-  };
+  }
 
   useEffect(() => {
     async function getCards() {
@@ -39,7 +39,6 @@ export default function Cards () {
 
     const interval = setInterval(fetchUID, 2000);
 
-    // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
@@ -119,6 +118,7 @@ export default function Cards () {
               name="type"
             >
               <option defaultValue="book">Book</option>
+              <option defaultValue="student">Student</option>
             </select>
             <button type="submit" className="btn btn-primary">
               {cardLoading ? (

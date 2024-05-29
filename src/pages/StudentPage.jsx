@@ -1,14 +1,14 @@
-// import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import TransactionItem from "../components/TransactionItem";
+import FormUpdateStudent from "../components/FormUpdateStudent";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 export default function Page() {
   const location = useLocation();
-  const { id, name, npm } = location.state;
+  const { id, name, npm, cardId } = location.state;
 
   const [transactions, setTransactions] = useState({});
 
@@ -22,7 +22,7 @@ export default function Page() {
         })
         .catch((error) => {
           console.error(error);
-          window.location = "/error";
+          // window.location = "/error";
         });
     }
 
@@ -42,26 +42,8 @@ export default function Page() {
       </Helmet>
 
       <div id="main-container" className="lg:ml-80 max-lg:mt-28 mt-20 px-8 z-10">
-        <div className="w-full max-w-lg">
-          <table className="table w-[260px]">
-            <tbody>
-              <tr>
-                <td>Id</td>
-                <td>:</td>
-                <td>{id}</td>
-              </tr>
-              <tr>
-                <td>Nama</td>
-                <td>:</td>
-                <td>{name}</td>
-              </tr>
-              <tr>
-                <td>NPM</td>
-                <td>:</td>
-                <td>{npm}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="w-full max-w-5xl mx-auto">
+          <FormUpdateStudent id={id} name={name} npm={npm} cardId={cardId}/>
         </div>
 
         <div className="divider"></div>

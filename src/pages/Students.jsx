@@ -54,7 +54,7 @@ export default function Cards() {
                     <th></th>
                     <th>Nama</th>
                     <th>NPM</th>
-                    <th>ID Kartu</th>
+                    <th>UID Kartu</th>
                     <th>Lihat</th>
                   </tr>
                 </thead>
