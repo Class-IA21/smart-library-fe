@@ -1,20 +1,19 @@
 import PropTypes from "prop-types";
 
-TransactionItem.propTypes = {
-  bookIds: PropTypes.array.isRequired,
+BookTransactionItem.propTypes = {
   number: PropTypes.number.isRequired,
-  id: PropTypes.string.isRequired,
+  transactionId: PropTypes.string.isRequired,
+  studentId: PropTypes.number.isRequired,
   dueDate: PropTypes.string.isRequired,
   borrowDate: PropTypes.string.isRequired, // Corrected PropTypes
   returnDate: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
 };
 
-
-export default function TransactionItem({
+export default function BookTransactionItem({
   number,
-  id,
-  bookIds,
+  transactionId,
+  studentId,
   borrowDate,
   dueDate,
   returnDate,
@@ -23,14 +22,8 @@ export default function TransactionItem({
   return (
     <tr className="hover">
       <th>{number}</th>
-      <td>{id}</td>
-      <td>
-        {bookIds.map((bookId, index) => (
-          <div key={index} className="list-disc">
-            {bookId}
-          </div>
-        ))}
-      </td>
+      <td>{transactionId}</td>
+      <td>{studentId}</td>
       <td>{borrowDate}</td>
       <td>{dueDate}</td>
       <td>{returnDate}</td>

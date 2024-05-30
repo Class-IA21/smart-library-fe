@@ -18,11 +18,12 @@ export default function Page() {
       axios
         .get(`${import.meta.env.VITE_APP_BASE_URL}borrows/student/${id}`)
         .then((response) => {
-          setTransactions(response.data);
+          setTransactions(response.data.data.transactions);
+          console.log(response.data.data.transactions);
         })
         .catch((error) => {
           console.error(error);
-          // window.location = "/error";
+          window.location = "/error";
         });
     }
 
@@ -41,9 +42,12 @@ export default function Page() {
         <link rel="icon" type="image/svg+xml" href="/icons/library-16.png" />
       </Helmet>
 
-      <div id="main-container" className="lg:ml-80 max-lg:mt-28 mt-20 px-8 z-10">
+      <div
+        id="main-container"
+        className="lg:ml-80 max-lg:mt-28 mt-20 px-8 z-10"
+      >
         <div className="w-full max-w-5xl mx-auto">
-          <FormUpdateStudent id={id} name={name} npm={npm} cardId={cardId}/>
+          <FormUpdateStudent id={id} name={name} npm={npm} cardId={cardId} />
         </div>
 
         <div className="divider"></div>
@@ -62,20 +66,22 @@ export default function Page() {
                   <th>Waktu Pinjam</th>
                   <th>Batas Waktu</th>
                   <th>Waktu Kembali</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-                {transactions.data && transactions.data.length > 0
-                  ? transactions.data.map((transaction, index) => {
+                {transactions && transactions.length > 0
+                  ? transactions.map((trx, index) => {
                       return (
                         <TransactionItem
                           key={index}
-                          id={transaction.id}
+                          id={trx.id}
                           number={index + 1}
-                          bookIds={transaction.book_ids}
-                          borrowDate={transaction.borrow_date}
-                          dueDate={transaction.due_date}
-                          returnDate={transaction.return_date}
+                          bookIds={trx.book_ids}
+                          borrowDate={trx.borrow_date}
+                          dueDate={trx.due_date}
+                          returnDate={trx.return_date}
+                          status={trx.status}
                         />
                       );
                     })

@@ -16,7 +16,7 @@ export default function Cards() {
         })
         .catch((error) => {
           console.error(error);
-          // window.location = "/error";
+          window.location = "/error";
         });
     }
 
@@ -61,6 +61,7 @@ export default function Cards() {
                 <tbody>
                   {students.data && students.data.length > 0
                     ? students.data.map((student, index) => {
+                      console.log(student.id, student.name)
                         return (
                           <StudentItem
                             key={index}

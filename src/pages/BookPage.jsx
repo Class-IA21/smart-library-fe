@@ -1,7 +1,7 @@
 // import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
-import TransactionItem from "../components/TransactionItem";
+import BookTransactionItem from "../components/BookTransactionItem";
 import FormBookPage from "../components/FormBookPage";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
@@ -10,6 +10,7 @@ import { Helmet } from "react-helmet";
 export default function Page() {
   const location = useLocation();
   const { id, cardID } = location.state;
+  console.log(id, cardID)
 
   if (!id) {
     window.location.href = "/dashboard";
@@ -18,7 +19,7 @@ export default function Page() {
   const [updateLoading, setUpdateLoading] = useState(false);
 
   const [data, setData] = useState({});
-  const [transactions, setTransactions] = useState({});
+  const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
     async function getData() {
@@ -37,7 +38,8 @@ export default function Page() {
       axios
         .get(`${import.meta.env.VITE_APP_BASE_URL}borrows/book/${id}`)
         .then((response) => {
-          setTransactions(response.data);
+          setTransactions(response.data.data);
+          console.log(response.data.data);
         })
         .catch((error) => {
           console.error(error);
@@ -160,21 +162,23 @@ export default function Page() {
               <thead>
                 <tr className="text-sm">
                   <th></th>
+                  <th>ID Transaksi</th>
                   <th>ID Peminjam</th>
                   <th>Waktu Pinjam</th>
                   <th>Batas Waktu</th>
                   <th>Waktu Kembali</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-                {transactions.data && transactions.data.length > 0
-                  ? transactions.data.map((transaction, index) => {
+                {transactions && transactions.length > 0
+                  ? transactions.map((transaction, index) => {
                       return (
-                        <TransactionItem
-                          key={index}
+                        <BookTransactionItem
                           number={index + 1}
-                          bookId={transaction.book_id}
+                          key={index}
                           studentId={transaction.student_id}
+                          transactionId={transaction.transaction_id}
                           borrowDate={transaction.borrow_date}
                           dueDate={transaction.due_date}
                           returnDate={transaction.return_date}

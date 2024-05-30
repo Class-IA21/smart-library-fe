@@ -88,7 +88,7 @@ export default function FormUpdateStudent({ id, name, npm, cardId }) {
     <>
       <form
         onSubmit={handleUpdateStudent}
-        className="w-full mx-auto mt-8 max-lg:px-4 text-sm"
+        className="w-full mx-auto mt-8 max-lg:px-2 px-4 text-sm"
       >
         <label>Nama</label>
         <input
@@ -116,7 +116,6 @@ export default function FormUpdateStudent({ id, name, npm, cardId }) {
           name="card_id"
           value={uid}
           required
-          readOnly
         />
 
         <div className="divider"></div>

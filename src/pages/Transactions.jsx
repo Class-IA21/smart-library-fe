@@ -5,14 +5,14 @@ import { Helmet } from "react-helmet";
 import TransactionItem from "../components/TransactionItem";
 
 export default function Cards() {
-  const [transactions, setTransactions] = useState({});
+  const [transaction, setTransaction] = useState([]);
 
   useEffect(() => {
     async function getTransactions() {
       axios
         .get(`${import.meta.env.VITE_APP_BASE_URL}borrows`)
         .then((response) => {
-          setTransactions(response.data);
+          setTransaction(response.data.data.transactions);
         })
         .catch((error) => {
           console.error(error);
@@ -52,8 +52,8 @@ export default function Cards() {
                 <thead>
                   <tr className="text-sm">
                     <th></th>
+                    <th>ID Transaksi</th>
                     <th>ID Buku</th>
-                    <th>ID Siswa</th>
                     <th>Tanggal Pinjam</th>
                     <th>Tanggal Akhir</th>
                     <th>Tanggal Kembali</th>
@@ -61,17 +61,18 @@ export default function Cards() {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.data && transactions.data.length > 0
-                    ? transactions.data.map((transaction, index) => {
+                  {transaction && transaction.length > 0
+                    ? transaction.map((trx, index) => {
                         return (
                           <TransactionItem
+                            id={trx.id}
                             key={index}
                             number={index + 1}
-                            bookIds={transaction.book_ids}
-                            studentId={transaction.student_id}
-                            dueDate={transaction.due_date}
-                            returnDate={transaction.return_date}
-                            status={transaction.status}
+                            bookIds={trx.book_ids}
+                            borrowDate={trx.borrow_date}
+                            dueDate={trx.due_date}
+                            returnDate={trx.return_date}
+                            status={trx.status}
                           />
                         );
                       })

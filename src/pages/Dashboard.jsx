@@ -9,7 +9,7 @@ export default function Dashboard() {
   const [activeSection, setActiveSection] = useState(
     sessionStorage.getItem("opened") || "container-book-list"
   );
-  const [books, setBooks] = useState({});
+  const [books, setBooks] = useState([]);
   const [bookLoading, setBookLoading] = useState(false);
 
   function setOpenedContainer(container) {
@@ -22,7 +22,7 @@ export default function Dashboard() {
       axios
         .get(import.meta.env.VITE_APP_BASE_URL + "books")
         .then((response) => {
-          setBooks(response.data);
+          setBooks(response.data.data);
         })
         .catch((error) => {
           console.error(error);
@@ -84,8 +84,8 @@ export default function Dashboard() {
             activeSection !== "container-book-list" ? "hidden" : ""
           }`}
         >
-          {books.data && books.data.length > 0
-            ? books.data.map((book, index) => {
+          {books && books.length > 0
+            ? books.map((book, index) => {
                 return (
                   <BookItem
                     key={index}
